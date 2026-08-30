@@ -11,6 +11,10 @@
   this naming policy only if the current branch is `main`; otherwise keep the
   current feature branch before committing.
 - After a PR is merged: switch back to `main`, pull the merged changes, and
-  delete the local and remote feature branch. Use `git branch -D` (not `-d`)
-  for the local delete — squash-merges leave the branch looking unmerged to
-  git, so `-d` refuses it.
+  verify the feature branch has no commits absent from the merged remote PR
+  before deleting it.
+- If unique local commits remain, create a backup branch or stop and inspect
+  them instead of deleting the branch.
+- Use `git branch -D` (not `-d`) for the local delete only after that safety
+  check passes — squash-merges leave the branch looking unmerged to git, so
+  `-d` refuses it.
