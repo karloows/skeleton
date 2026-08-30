@@ -44,7 +44,11 @@ When the user says **"land"**, run:
 1. Squash-merge the open PR using the GitHub MCP connector. Do not use `gh`.
 2. Check out `main`.
 3. `git pull` to bring the merge down locally.
-4. Delete the feature branch, both local and remote.
+4. Verify the feature branch has no commits absent from the merged remote PR.
+5. If unique local commits remain, create a backup branch or stop and inspect
+   them instead of deleting the branch.
+6. Delete the local feature branch. Use `git branch -D` only after the safety
+   check passes.
 
 ## Read These
 
