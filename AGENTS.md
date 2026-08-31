@@ -45,8 +45,10 @@ Repo-local skills:
   connector without asking for extra confirmation. Do not use `gh` for this
   workflow.
 - `land` means: squash-merge the PR using the GitHub MCP connector, switch the
-  local checkout back to `main`, pull the merged changes, and delete the local
-  branch. Do not use `gh` for this workflow.
+  local checkout back to `main`, pull the merged changes, and complete the
+  mandatory cleanup steps from
+  [.agents/policies/branch-policy.md](.agents/policies/branch-policy.md)
+  before deleting the local branch. Do not use `gh` for this workflow.
 
 ## Conventions
 
