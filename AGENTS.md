@@ -41,10 +41,12 @@ Repo-local skills:
   conventional commits with a required body.
 - `ship` means: if the current branch is `main`, create and check out a new
   branch that follows branch policy; otherwise keep the current feature branch.
-  Then commit the work, push the branch, and open a PR without asking for extra
-  confirmation.
-- `land` means: squash-merge the PR, switch the local checkout back to `main`,
-  pull the merged changes, and delete the local branch.
+  Then commit the work, push the branch, and open a PR using the GitHub MCP
+  connector without asking for extra confirmation. Do not use `gh` for this
+  workflow.
+- `land` means: squash-merge the PR using the GitHub MCP connector, switch the
+  local checkout back to `main`, pull the merged changes, and delete the local
+  branch. Do not use `gh` for this workflow.
 
 ## Conventions
 
