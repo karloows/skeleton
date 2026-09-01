@@ -99,13 +99,14 @@ class SkeletonText extends StatelessWidget {
     bool softWrap,
     double maxWidth,
   ) {
+    final textDirection = child.textDirection ?? Directionality.of(context);
     final painter = TextPainter(
       text: TextSpan(
         style: style,
         text: child.data,
         children: child.textSpan != null ? [child.textSpan!] : null,
       ),
-      textDirection: child.textDirection ?? Directionality.of(context),
+      textDirection: textDirection,
       textScaler: textScaler,
       maxLines: maxLines,
     )..layout(maxWidth: softWrap ? maxWidth : double.infinity);
@@ -124,6 +125,7 @@ class SkeletonText extends StatelessWidget {
     }
 
     return Column(
+      textDirection: textDirection,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [

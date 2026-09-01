@@ -193,10 +193,6 @@ void main() {
 
   testWidgets('SkeletonText uses an explicit textDirection without ambient '
       'Directionality', (tester) async {
-    // Empty text keeps SkeletonText on its single-bone (no Column) path, so
-    // this isolates the TextPainter's own textDirection fallback from
-    // SkeletonBone's unrelated Directionality requirement for laying out
-    // multiple bones in a Column.
     await tester.pumpWidget(
       const Skeleton(
         loading: true,
@@ -206,6 +202,31 @@ void main() {
 
     expect(find.byType(SkeletonBone), findsOneWidget);
   });
+
+  testWidgets(
+    'SkeletonText wraps multi-line RTL text without ambient Directionality',
+    (tester) async {
+      await tester.pumpWidget(
+        const Skeleton(
+          loading: true,
+          child: SkeletonText(
+            width: 120,
+            child: Text(
+              'Learn about the latest design patterns and best practices '
+              'for building scalable Flutter applications.',
+              textDirection: TextDirection.rtl,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(SkeletonBone), findsWidgets);
+      expect(
+        tester.widgetList<SkeletonBone>(find.byType(SkeletonBone)).length,
+        greaterThan(1),
+      );
+    },
+  );
 
   testWidgets(
     'SkeletonText inherits maxLines and softWrap from DefaultTextStyle',
