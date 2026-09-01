@@ -93,7 +93,7 @@ void main() {
                         'Learn about the latest design patterns and best '
                         'practices for building scalable Flutter '
                         'applications.',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, color: Color(0xFF445566)),
                   ),
                 ),
               ),
@@ -103,8 +103,12 @@ void main() {
       ),
     );
 
-    expect(find.byType(SkeletonBone), findsWidgets);
-    expect(tester.widgetList(find.byType(SkeletonBone)).length, greaterThan(1));
+    final bones = tester.widgetList<SkeletonBone>(find.byType(SkeletonBone));
+    expect(bones.length, greaterThan(1));
+    for (final bone in bones) {
+      expect(bone.color, const Color(0xFF445566));
+      expect(bone.height, 16 * 1.2);
+    }
   });
 
   testWidgets('SkeletonText respects softWrap: false as a single line', (

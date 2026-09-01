@@ -49,7 +49,9 @@ class SkeletonText extends StatelessWidget {
     }
 
     final defaultTextStyle = DefaultTextStyle.of(context);
-    final style = defaultTextStyle.style.merge(child.style);
+    var style = defaultTextStyle.style.merge(child.style);
+    final rootSpanStyle = child.textSpan?.style;
+    if (rootSpanStyle != null) style = style.merge(rootSpanStyle);
     final color = style.color ?? _fallbackColor;
 
     final textScaler = child.textScaler ?? MediaQuery.textScalerOf(context);
