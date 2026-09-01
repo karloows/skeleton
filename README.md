@@ -3,9 +3,10 @@
 Skeleton loading widgets for Flutter that match the **color** of the
 content they replace, not just its shape. A text placeholder is tinted
 with the text's own color, an image placeholder is tinted with that
-image's average color, and a box placeholder uses the same fill color as
-the real content — so the loading state fades into the real UI instead of
-flashing from generic gray to full color.
+image's average color (initially a neutral gray, then asynchronously
+updated when sampling completes), and a box placeholder uses the same fill
+color as the real content — so the loading state fades into the real UI
+instead of flashing from generic gray to full color.
 
 See [PLAN.md](PLAN.md) for the full roadmap, including planned niches
 beyond color-matching (async-aware reflow, per-widget-type smart bones,
@@ -46,7 +47,7 @@ Skeleton(
       ),
     ],
   ),
-)
+);
 ```
 
 Toggle `loading` on the ambient `Skeleton` and every descendant
