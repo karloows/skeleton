@@ -88,8 +88,8 @@ class _SkeletonImageState extends State<SkeletonImage> {
   void _onFrame(ImageInfo info, bool _) {
     final key = _activeImageKey;
     final size = Size(
-      info.image.width.toDouble(),
-      info.image.height.toDouble(),
+      info.image.width / info.scale,
+      info.image.height / info.scale,
     );
     if (mounted && _activeImageKey == key) {
       setState(() => _naturalSize = size);

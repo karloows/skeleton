@@ -74,4 +74,64 @@ void main() {
     expect(expectedLines, greaterThan(1));
     expect(find.byType(SkeletonBone), findsNWidgets(expectedLines));
   });
+
+  testWidgets('SkeletonText measures Text.rich via its textSpan', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: SizedBox(
+            width: 120,
+            child: Skeleton(
+              loading: true,
+              child: SkeletonText(
+                child: Text.rich(
+                  TextSpan(
+                    text:
+                        'Learn about the latest design patterns and best '
+                        'practices for building scalable Flutter '
+                        'applications.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(SkeletonBone), findsWidgets);
+    expect(tester.widgetList(find.byType(SkeletonBone)).length, greaterThan(1));
+  });
+
+  testWidgets('SkeletonText respects softWrap: false as a single line', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: SizedBox(
+            width: 120,
+            child: Skeleton(
+              loading: true,
+              child: SkeletonText(
+                child: Text(
+                  'Learn about the latest design patterns and best '
+                  'practices for building scalable Flutter applications.',
+                  softWrap: false,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(SkeletonBone), findsOneWidget);
+  });
 }

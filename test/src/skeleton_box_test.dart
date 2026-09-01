@@ -54,4 +54,30 @@ void main() {
 
     expect(tester.getSize(find.byType(SkeletonBone)), const Size(60, 30));
   });
+
+  testWidgets('SkeletonBox preserves the child Container margin', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: Skeleton(
+            loading: true,
+            child: SkeletonBox(
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                color: const Color(0xFFAA00AA),
+                width: 60,
+                height: 30,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getSize(find.byType(SkeletonBone)), const Size(60, 30));
+    expect(tester.getSize(find.byType(Padding)), const Size(80, 50));
+  });
 }

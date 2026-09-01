@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart'
         Directionality,
         LayoutBuilder,
         MainAxisSize,
+        MediaQuery,
         SizedBox,
         StatelessWidget,
         Text,
@@ -69,10 +70,15 @@ class SkeletonText extends StatelessWidget {
     double maxWidth,
   ) {
     final painter = TextPainter(
-      text: TextSpan(text: child.data ?? '', style: style),
+      text: TextSpan(
+        style: style,
+        text: child.data,
+        children: child.textSpan != null ? [child.textSpan!] : null,
+      ),
       textDirection: Directionality.of(context),
+      textScaler: child.textScaler ?? MediaQuery.textScalerOf(context),
       maxLines: child.maxLines,
-    )..layout(maxWidth: maxWidth);
+    )..layout(maxWidth: (child.softWrap ?? true) ? maxWidth : double.infinity);
     final lines = painter.computeLineMetrics();
     painter.dispose();
 

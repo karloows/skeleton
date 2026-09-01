@@ -1,5 +1,12 @@
 import 'package:flutter/widgets.dart'
-    show BorderRadius, BuildContext, Color, Container, StatelessWidget, Widget;
+    show
+        BorderRadius,
+        BuildContext,
+        Color,
+        Container,
+        Padding,
+        StatelessWidget,
+        Widget;
 
 import 'skeleton_bone.dart' show SkeletonBone;
 import 'skeleton_scope.dart' show Skeleton;
@@ -39,7 +46,7 @@ class SkeletonBox extends StatelessWidget {
     }
 
     final constraints = child.constraints;
-    return SkeletonBone(
+    final bone = SkeletonBone(
       color: color ?? child.color ?? _fallbackColor,
       width:
           width ??
@@ -51,5 +58,7 @@ class SkeletonBox extends StatelessWidget {
               : null),
       borderRadius: borderRadius,
     );
+    final margin = child.margin;
+    return margin == null ? bone : Padding(padding: margin, child: bone);
   }
 }
