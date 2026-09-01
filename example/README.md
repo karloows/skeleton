@@ -14,7 +14,7 @@ This example showcases all three core skeleton widgets:
 
 ```bash
 flutter pub get
-flutter run -d chrome  # or macOS, or any available device
+flutter run -d chrome  # or any available device
 ```
 
 Toggle between the **Loading** and **Loaded** tabs to see how each widget transitions from skeleton to real content. Notice how the bone colors match the actual content — text bones inherit text color, image bones sample from the image's pixels, and fill bones use the declared color.
