@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart'
         BuildContext,
         Color,
         DecoratedBox,
+        LayoutBuilder,
         LinearGradient,
         Radius,
         SingleTickerProviderStateMixin,
@@ -15,6 +16,8 @@ import 'package:flutter/widgets.dart'
         State,
         StatefulWidget,
         Widget;
+
+const _fallbackExtent = 100.0;
 
 /// The shared low-level skeleton placeholder: a shimmering box painted in
 /// [color].
@@ -33,7 +36,12 @@ class SkeletonBone extends StatefulWidget {
 
   /// The bone's base color, normally sampled from the content it replaces.
   final Color color;
+
+  /// Bone width. When omitted, fills the parent's bounded width, or falls
+  /// back to a fixed extent under unbounded constraints.
   final double? width;
+
+  /// Bone height. Same fallback behavior as [width].
   final double? height;
   final BorderRadius borderRadius;
 
@@ -56,6 +64,29 @@ class _SkeletonBoneState extends State<SkeletonBone>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.width != null && widget.height != null) {
+      return _shimmer(widget.width, widget.height);
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) => _shimmer(
+        widget.width ??
+            _extentOrFallback(
+              constraints.hasBoundedWidth,
+              constraints.maxWidth,
+            ),
+        widget.height ??
+            _extentOrFallback(
+              constraints.hasBoundedHeight,
+              constraints.maxHeight,
+            ),
+      ),
+    );
+  }
+
+  static double _extentOrFallback(bool bounded, double extent) =>
+      bounded ? extent : _fallbackExtent;
+
+  Widget _shimmer(double? width, double? height) {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
@@ -69,7 +100,7 @@ class _SkeletonBoneState extends State<SkeletonBone>
               colors: [widget.color, widget.color.withAlpha(102), widget.color],
             ),
           ),
-          child: SizedBox(width: widget.width, height: widget.height),
+          child: SizedBox(width: width, height: height),
         );
       },
     );

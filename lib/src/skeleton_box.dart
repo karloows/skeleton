@@ -1,27 +1,33 @@
 import 'package:flutter/widgets.dart'
-    show BorderRadius, BuildContext, Color, StatelessWidget, Widget;
+    show BorderRadius, BuildContext, Color, Container, StatelessWidget, Widget;
 
 import 'skeleton_bone.dart' show SkeletonBone;
 import 'skeleton_scope.dart' show Skeleton;
 
-/// A drop-in wrapper for a fill widget (`Container`, `Card`, ...) that
-/// renders a skeleton bone painted with [color] while the nearest
-/// [Skeleton] is loading.
+const _fallbackColor = Color(0xFF9E9E9E);
+
+/// A wrapper around a [Container] that renders a skeleton bone matching its
+/// [Container.color] and size while the nearest [Skeleton] is loading, and
+/// [child] itself otherwise.
 class SkeletonBox extends StatelessWidget {
   const SkeletonBox({
     super.key,
     required this.child,
-    required this.color,
+    this.color,
     this.width,
     this.height,
     this.borderRadius = BorderRadius.zero,
   });
 
-  final Widget child;
+  final Container child;
 
-  /// The bone's color while loading, normally the same fill color [child]
-  /// uses once loaded.
-  final Color color;
+  /// The bone's color while loading. Defaults to [child]'s own
+  /// [Container.color] so the placeholder matches the fill it replaces.
+  final Color? color;
+
+  /// Bone size while loading. Defaults to [child]'s own resolved size
+  /// (from its `width`/`height`/`constraints`) when set; otherwise fills
+  /// the space the parent gives it, same as [SkeletonBone].
   final double? width;
   final double? height;
   final BorderRadius borderRadius;
@@ -32,10 +38,17 @@ class SkeletonBox extends StatelessWidget {
       return child;
     }
 
+    final constraints = child.constraints;
     return SkeletonBone(
-      color: color,
-      width: width ?? 100,
-      height: height ?? 100,
+      color: color ?? child.color ?? _fallbackColor,
+      width:
+          width ??
+          (constraints?.hasTightWidth ?? false ? constraints!.maxWidth : null),
+      height:
+          height ??
+          (constraints?.hasTightHeight ?? false
+              ? constraints!.maxHeight
+              : null),
       borderRadius: borderRadius,
     );
   }
