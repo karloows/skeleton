@@ -75,14 +75,22 @@ flat theme shimmer color.
 
 - `Image` widgets: sample the dominant/average pixel color of the image
   (decode once, cache the result) and use it as the bone's base color.
+  Until sampling completes, render a neutral gray fallback. This means
+  SkeletonImage shows a brief gray bone → color-matched bone → real image,
+  trading a small flash for avoiding pre-decoding overhead in v0.
 - `Text` widgets: use the resolved `TextStyle.color` (or the ambient
   `DefaultTextStyle` color) as the bone color instead of a generic gray.
+  Text colors are available synchronously; no fallback needed.
 - `Container` / `Card` / other fill widgets: use their `color` /
-  `decoration` fill directly.
-- Fallback: when no color can be determined, fall back to a neutral gray
-  — never leave a bone unpainted.
-- The effect should read as: skeleton fades from a color-matched
-  placeholder into the real content, not a gray flash replaced by color.
+  `decoration` fill directly. Fill colors are available synchronously;
+  no fallback needed.
+- Fallback: only `SkeletonImage` uses a neutral gray fallback (while
+  decoding). Other widgets never show a generic gray — only content-matched
+  color from the start.
+- The effect goal: for `SkeletonText` and `SkeletonBox`, fade from
+  color-matched placeholder into real content (no gray flash).
+  For `SkeletonImage`, accept a brief gray→color transition as a v0 trade-off;
+  upgrade to pre-decoded snapshots (niche 5) if this becomes a UX issue.
 
 ### 2. Async-aware reflow
 
