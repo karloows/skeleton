@@ -82,9 +82,7 @@ class _UserCard extends StatelessWidget {
         child: Row(
           children: [
             SkeletonImage(
-              image: const NetworkImage(
-                'https://placehold.co/64x64/667bc6/ffffff',
-              ),
+              image: const NetworkImage('https://picsum.photos/64/64?random=1'),
               width: 64,
               height: 64,
               borderRadius: BorderRadius.circular(32),
@@ -129,7 +127,7 @@ class _BlogPostCard extends StatelessWidget {
           children: [
             SkeletonImage(
               image: const NetworkImage(
-                'https://placehold.co/400x200/3d5a80/ffffff',
+                'https://picsum.photos/400/200?random=2',
               ),
               width: double.infinity,
               height: 200,
@@ -173,9 +171,7 @@ class _ProductCard extends StatelessWidget {
         child: Row(
           children: [
             SkeletonImage(
-              image: const NetworkImage(
-                'https://placehold.co/80x80/c41e3a/ffffff',
-              ),
+              image: const NetworkImage('https://picsum.photos/80/80?random=3'),
               width: 80,
               height: 80,
               borderRadius: BorderRadius.circular(4),
