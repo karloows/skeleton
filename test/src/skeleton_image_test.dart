@@ -19,11 +19,15 @@ class _TestImageProvider extends ImageProvider<String> {
     const size = Size(100, 100);
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder);
-    canvas.drawRect(const Rect.fromLTWH(0, 0, 100, 100),
-        ui.Paint()..color = const Color(0xFFEE1111));
+    canvas.drawRect(
+      const Rect.fromLTWH(0, 0, 100, 100),
+      ui.Paint()..color = const Color(0xFFEE1111),
+    );
     final picture = recorder.endRecording();
-    final image =
-        await picture.toImage(size.width.toInt(), size.height.toInt());
+    final image = await picture.toImage(
+      size.width.toInt(),
+      size.height.toInt(),
+    );
     return ImageInfo(image: image);
   }
 }
