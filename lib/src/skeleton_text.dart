@@ -51,7 +51,15 @@ class SkeletonText extends StatelessWidget {
     final defaultTextStyle = DefaultTextStyle.of(context);
     var style = defaultTextStyle.style.merge(child.style);
     final rootSpanStyle = child.textSpan?.style;
-    if (rootSpanStyle != null) style = style.merge(rootSpanStyle);
+    if (rootSpanStyle != null) {
+      // TextSpan.build() pushes styles onto the native paragraph builder's
+      // style stack, where unset fields always inherit from the parent
+      // regardless of TextStyle.inherit — unlike TextStyle.merge(), which
+      // discards the base style entirely when inherit is false. Force
+      // inherit here so ancestor fields (e.g. fontSize) survive the merge
+      // the same way they'd survive real rendering.
+      style = style.merge(rootSpanStyle.copyWith(inherit: true));
+    }
     final color = style.color ?? _fallbackColor;
 
     final textScaler = child.textScaler ?? MediaQuery.textScalerOf(context);
@@ -97,7 +105,7 @@ class SkeletonText extends StatelessWidget {
         text: child.data,
         children: child.textSpan != null ? [child.textSpan!] : null,
       ),
-      textDirection: Directionality.of(context),
+      textDirection: child.textDirection ?? Directionality.of(context),
       textScaler: textScaler,
       maxLines: maxLines,
     )..layout(maxWidth: softWrap ? maxWidth : double.infinity);

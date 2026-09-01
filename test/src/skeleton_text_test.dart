@@ -162,6 +162,52 @@ void main() {
   });
 
   testWidgets(
+    'SkeletonText inherits ancestor fontSize into a Text.rich span with '
+    'inherit: false',
+    (tester) async {
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: DefaultTextStyle(
+            style: TextStyle(fontSize: 30, color: Color(0xFF112233)),
+            child: Skeleton(
+              loading: true,
+              child: SkeletonText(
+                child: Text.rich(
+                  TextSpan(
+                    text: 'hello',
+                    style: TextStyle(inherit: false, color: Color(0xFF445566)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final bone = tester.widget<SkeletonBone>(find.byType(SkeletonBone));
+      expect(bone.color, const Color(0xFF445566));
+      expect(bone.height, 30 * 1.2);
+    },
+  );
+
+  testWidgets('SkeletonText uses an explicit textDirection without ambient '
+      'Directionality', (tester) async {
+    // Empty text keeps SkeletonText on its single-bone (no Column) path, so
+    // this isolates the TextPainter's own textDirection fallback from
+    // SkeletonBone's unrelated Directionality requirement for laying out
+    // multiple bones in a Column.
+    await tester.pumpWidget(
+      const Skeleton(
+        loading: true,
+        child: SkeletonText(child: Text('', textDirection: TextDirection.rtl)),
+      ),
+    );
+
+    expect(find.byType(SkeletonBone), findsOneWidget);
+  });
+
+  testWidgets(
     'SkeletonText inherits maxLines and softWrap from DefaultTextStyle',
     (tester) async {
       const longText =
