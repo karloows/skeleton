@@ -1,39 +1,59 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# skeleton
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Skeleton loading widgets for Flutter that match the **color** of the
+content they replace, not just its shape. A text placeholder is tinted
+with the text's own color, an image placeholder is tinted with that
+image's average color, and a box placeholder uses the same fill color as
+the real content — so the loading state fades into the real UI instead of
+flashing from generic gray to full color.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+See [PLAN.md](PLAN.md) for the full roadmap, including planned niches
+beyond color-matching (async-aware reflow, per-widget-type smart bones,
+diff-based list updates, and zero-flash first paint).
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- `Skeleton` — an ambient scope that marks a subtree as loading.
+- `SkeletonText` — drop-in for `Text`; bone color follows the text's own
+  style color.
+- `SkeletonImage` — drop-in for `Image`; bone color is sampled from the
+  image's average pixel color.
+- `SkeletonBox` — drop-in wrapper for `Container`/`Card`-style fills; bone
+  color matches the fill color you pass in.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+Skeleton(
+  loading: isLoading,
+  child: Column(
+    children: [
+      SkeletonImage(
+        image: NetworkImage(user.avatarUrl),
+        width: 48,
+        height: 48,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      SkeletonText(
+        user.name,
+        style: const TextStyle(fontSize: 16, color: Colors.black87),
+      ),
+      SkeletonBox(
+        color: Colors.blue.shade50,
+        width: 120,
+        height: 32,
+        child: PriceTag(product.price),
+      ),
+    ],
+  ),
+)
 ```
+
+Toggle `loading` on the ambient `Skeleton` and every descendant
+`SkeletonText`/`SkeletonImage`/`SkeletonBox` switches between its bone and
+the real widget automatically.
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Still pre-1.0 and under active development — see [PLAN.md](PLAN.md) for
+what's built and what's planned next.
