@@ -134,4 +134,57 @@ void main() {
 
     expect(find.byType(SkeletonBone), findsOneWidget);
   });
+
+  testWidgets('SkeletonText scales bone height with a non-default TextScaler', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: Skeleton(
+            loading: true,
+            child: SkeletonText(
+              child: Text('hello', style: TextStyle(fontSize: 10)),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final bone = tester.widget<SkeletonBone>(find.byType(SkeletonBone));
+    expect(bone.height, 10 * 2 * 1.2);
+  });
+
+  testWidgets(
+    'SkeletonText inherits maxLines and softWrap from DefaultTextStyle',
+    (tester) async {
+      const longText =
+          'Learn about the latest design patterns and best practices for '
+          'building scalable Flutter applications.';
+
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: SizedBox(
+              width: 120,
+              child: DefaultTextStyle(
+                style: TextStyle(fontSize: 16),
+                maxLines: 1,
+                softWrap: false,
+                child: Skeleton(
+                  loading: true,
+                  child: SkeletonText(child: Text(longText)),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(SkeletonBone), findsOneWidget);
+    },
+  );
 }

@@ -14,6 +14,7 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         TextPainter,
+        TextScaler,
         TextSpan,
         TextStyle,
         Widget;
@@ -47,17 +48,33 @@ class SkeletonText extends StatelessWidget {
       return child;
     }
 
-    final style = DefaultTextStyle.of(context).style.merge(child.style);
+    final defaultTextStyle = DefaultTextStyle.of(context);
+    final style = defaultTextStyle.style.merge(child.style);
     final color = style.color ?? _fallbackColor;
 
+    final textScaler = child.textScaler ?? MediaQuery.textScalerOf(context);
+    final maxLines = child.maxLines ?? defaultTextStyle.maxLines;
+    final softWrap = child.softWrap ?? defaultTextStyle.softWrap;
+
     if (width != null) {
-      return _bones(context, style, color, width!);
+      return _bones(
+        context,
+        style,
+        color,
+        textScaler,
+        maxLines,
+        softWrap,
+        width!,
+      );
     }
     return LayoutBuilder(
       builder: (context, constraints) => _bones(
         context,
         style,
         color,
+        textScaler,
+        maxLines,
+        softWrap,
         constraints.hasBoundedWidth ? constraints.maxWidth : double.infinity,
       ),
     );
@@ -67,6 +84,9 @@ class SkeletonText extends StatelessWidget {
     BuildContext context,
     TextStyle style,
     Color color,
+    TextScaler textScaler,
+    int? maxLines,
+    bool softWrap,
     double maxWidth,
   ) {
     final painter = TextPainter(
@@ -76,13 +96,13 @@ class SkeletonText extends StatelessWidget {
         children: child.textSpan != null ? [child.textSpan!] : null,
       ),
       textDirection: Directionality.of(context),
-      textScaler: child.textScaler ?? MediaQuery.textScalerOf(context),
-      maxLines: child.maxLines,
-    )..layout(maxWidth: (child.softWrap ?? true) ? maxWidth : double.infinity);
+      textScaler: textScaler,
+      maxLines: maxLines,
+    )..layout(maxWidth: softWrap ? maxWidth : double.infinity);
     final lines = painter.computeLineMetrics();
     painter.dispose();
 
-    final fontSize = style.fontSize ?? _fallbackFontSize;
+    final fontSize = textScaler.scale(style.fontSize ?? _fallbackFontSize);
     final radius = BorderRadius.circular(fontSize / 3);
     if (lines.isEmpty) {
       return SkeletonBone(
