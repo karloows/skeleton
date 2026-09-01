@@ -34,8 +34,8 @@ class SkeletonBox extends StatelessWidget {
 
     return SkeletonBone(
       color: color,
-      width: width,
-      height: height,
+      width: width ?? 100,
+      height: height ?? 100,
       borderRadius: borderRadius,
     );
   }

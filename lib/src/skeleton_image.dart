@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart'
         BorderRadius,
         BoxFit,
         BuildContext,
+        ClipRRect,
         Color,
         Image,
         ImageConfiguration,
@@ -51,6 +52,7 @@ class SkeletonImage extends StatefulWidget {
 class _SkeletonImageState extends State<SkeletonImage> {
   Color? _averageColor;
   ImageStream? _stream;
+  Object? _activeImageKey;
   late ImageStreamListener _listener;
 
   @override
@@ -71,13 +73,17 @@ class _SkeletonImageState extends State<SkeletonImage> {
 
   void _subscribe() {
     _stream?.removeListener(_listener);
+    _activeImageKey = widget.image;
     _stream = widget.image.resolve(const ImageConfiguration());
     _stream!.addListener(_listener);
   }
 
   void _onFrame(ImageInfo info, bool _) {
+    final key = _activeImageKey;
     _averageColorOf(info.image).then((color) {
-      if (mounted) setState(() => _averageColor = color);
+      if (mounted && _activeImageKey == key) {
+        setState(() => _averageColor = color);
+      }
     });
   }
 
@@ -107,18 +113,20 @@ class _SkeletonImageState extends State<SkeletonImage> {
   @override
   Widget build(BuildContext context) {
     if (!Skeleton.of(context)) {
-      return Image(
+      final image = Image(
         image: widget.image,
         width: widget.width,
         height: widget.height,
         fit: widget.fit,
       );
+      if (widget.borderRadius == BorderRadius.zero) return image;
+      return ClipRRect(borderRadius: widget.borderRadius, child: image);
     }
 
     return SkeletonBone(
       color: _averageColor ?? _fallbackColor,
-      width: widget.width,
-      height: widget.height,
+      width: widget.width ?? 100,
+      height: widget.height ?? 100,
       borderRadius: widget.borderRadius,
     );
   }
