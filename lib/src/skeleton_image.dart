@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart'
         ImageProvider,
         ImageStream,
         ImageStreamListener,
+        Size,
         State,
         StatefulWidget,
         Widget;
@@ -40,6 +41,10 @@ class SkeletonImage extends StatefulWidget {
   });
 
   final ImageProvider image;
+
+  /// Bone size while loading. When omitted, matches [image]'s own decoded
+  /// pixel dimensions once known; until then, falls back to filling the
+  /// space the parent gives it, same as [SkeletonBone].
   final double? width;
   final double? height;
   final BoxFit? fit;
@@ -51,6 +56,7 @@ class SkeletonImage extends StatefulWidget {
 
 class _SkeletonImageState extends State<SkeletonImage> {
   Color? _averageColor;
+  Size? _naturalSize;
   ImageStream? _stream;
   Object? _activeImageKey;
   late ImageStreamListener _listener;
@@ -67,6 +73,7 @@ class _SkeletonImageState extends State<SkeletonImage> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.image != widget.image) {
       _averageColor = null;
+      _naturalSize = null;
       _subscribe();
     }
   }
@@ -80,6 +87,13 @@ class _SkeletonImageState extends State<SkeletonImage> {
 
   void _onFrame(ImageInfo info, bool _) {
     final key = _activeImageKey;
+    final size = Size(
+      info.image.width / info.scale,
+      info.image.height / info.scale,
+    );
+    if (mounted && _activeImageKey == key) {
+      setState(() => _naturalSize = size);
+    }
     _averageColorOf(info.image).then((color) {
       if (mounted && _activeImageKey == key) {
         setState(() => _averageColor = color);
@@ -125,8 +139,8 @@ class _SkeletonImageState extends State<SkeletonImage> {
 
     return SkeletonBone(
       color: _averageColor ?? _fallbackColor,
-      width: widget.width ?? 100,
-      height: widget.height ?? 100,
+      width: widget.width ?? _naturalSize?.width,
+      height: widget.height ?? _naturalSize?.height,
       borderRadius: widget.borderRadius,
     );
   }

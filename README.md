@@ -15,12 +15,17 @@ diff-based list updates, and zero-flash first paint).
 ## Features
 
 - `Skeleton` — an ambient scope that marks a subtree as loading.
-- `SkeletonText` — drop-in for `Text`; bone color follows the text's own
+- `SkeletonText` — wraps a `Text`; bone color follows the text's own
   style color.
 - `SkeletonImage` — drop-in for `Image`; bone color is sampled from the
-  image's average pixel color.
-- `SkeletonBox` — drop-in wrapper for `Container`/`Card`-style fills; bone
-  color matches the fill color you pass in.
+  image's average pixel color, and bone size matches the image's own
+  decoded dimensions when `width`/`height` aren't given.
+- `SkeletonBox` — wraps a `Container`; bone color and size follow the
+  container's own `color`/`width`/`height`.
+
+`width`/`height` are optional everywhere — omit them and each widget sizes
+itself from its content (or the space its parent gives it) instead of a
+generic placeholder box.
 
 ## Usage
 
@@ -31,19 +36,21 @@ Skeleton(
     children: [
       SkeletonImage(
         image: NetworkImage(user.avatarUrl),
-        width: 48,
-        height: 48,
         borderRadius: BorderRadius.circular(24),
       ),
       SkeletonText(
-        user.name,
-        style: const TextStyle(fontSize: 16, color: Colors.black87),
+        child: Text(
+          user.name,
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+        ),
       ),
       SkeletonBox(
-        color: Colors.blue.shade50,
-        width: 120,
-        height: 32,
-        child: PriceTag(product.price),
+        child: Container(
+          color: Colors.blue.shade50,
+          width: 120,
+          height: 32,
+          child: PriceTag(product.price),
+        ),
       ),
     ],
   ),

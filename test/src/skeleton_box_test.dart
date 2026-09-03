@@ -11,11 +11,13 @@ void main() {
       textDirection: TextDirection.ltr,
       child: Skeleton(
         loading: loading,
-        child: const SkeletonBox(
-          color: Color(0xFFAA00AA),
-          width: 40,
-          height: 40,
-          child: SizedBox(key: Key('real-child')),
+        child: SkeletonBox(
+          child: Container(
+            key: Key('real-child'),
+            color: Color(0xFFAA00AA),
+            width: 40,
+            height: 40,
+          ),
         ),
       ),
     );
@@ -28,5 +30,54 @@ void main() {
     expect(find.byKey(const Key('real-child')), findsNothing);
     final bone = tester.widget<SkeletonBone>(find.byType(SkeletonBone));
     expect(bone.color, const Color(0xFFAA00AA));
+  });
+
+  testWidgets('SkeletonBox matches the child Container size when width and '
+      'height are omitted', (tester) async {
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: Skeleton(
+            loading: true,
+            child: SkeletonBox(
+              child: Container(
+                color: const Color(0xFFAA00AA),
+                width: 60,
+                height: 30,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getSize(find.byType(SkeletonBone)), const Size(60, 30));
+  });
+
+  testWidgets('SkeletonBox preserves the child Container margin', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: Skeleton(
+            loading: true,
+            child: SkeletonBox(
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                color: const Color(0xFFAA00AA),
+                width: 60,
+                height: 30,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getSize(find.byType(SkeletonBone)), const Size(60, 30));
+    expect(tester.getSize(find.byType(Padding)), const Size(80, 50));
   });
 }

@@ -3,46 +3,142 @@ import 'package:flutter/widgets.dart'
         BorderRadius,
         BuildContext,
         Color,
+        Column,
+        CrossAxisAlignment,
         DefaultTextStyle,
+        Directionality,
+        LayoutBuilder,
+        MainAxisSize,
+        MediaQuery,
+        SizedBox,
         StatelessWidget,
         Text,
+        TextPainter,
+        TextScaler,
+        TextSpan,
         TextStyle,
         Widget;
 
 import 'skeleton_bone.dart' show SkeletonBone;
 import 'skeleton_scope.dart' show Skeleton;
 
-/// A drop-in replacement for [Text] that renders a color-matched skeleton
-/// bone while the nearest [Skeleton] is loading.
+const _fallbackColor = Color(0xFF9E9E9E);
+const _fallbackFontSize = 14.0;
+const _lineGap = 6.0;
+
+/// A wrapper around [child] that renders a color-matched skeleton bone
+/// while the nearest [Skeleton] is loading, and [child] itself otherwise.
 ///
-/// The bone color is sampled from [style]'s color, or the ambient
-/// [DefaultTextStyle] color when [style] doesn't set one, so the
-/// placeholder matches the text that will replace it.
+/// The bone is measured with the same [TextPainter] Flutter uses to lay
+/// out real text, so it mirrors [child]'s wrapped line count and each
+/// line's width — not just its color. Bar height and inter-line spacing
+/// are fixed, readable defaults rather than exact font metrics.
 class SkeletonText extends StatelessWidget {
-  const SkeletonText(this.data, {super.key, this.style, this.width});
+  const SkeletonText({super.key, required this.child, this.width});
 
-  final String data;
-  final TextStyle? style;
+  final Text child;
 
-  /// Bone width while loading. Defaults to an estimate based on [data]'s
-  /// length so the placeholder roughly matches the eventual text.
+  /// Max width available for wrapping, matching how [child] would wrap.
+  /// When omitted, uses the space the parent gives it.
   final double? width;
 
   @override
   Widget build(BuildContext context) {
     if (!Skeleton.of(context)) {
-      return Text(data, style: style);
+      return child;
     }
 
-    final defaultStyle = DefaultTextStyle.of(context).style;
-    final color = style?.color ?? defaultStyle.color ?? const Color(0xFF9E9E9E);
-    final fontSize = style?.fontSize ?? defaultStyle.fontSize ?? 14;
+    final defaultTextStyle = DefaultTextStyle.of(context);
+    var style = defaultTextStyle.style.merge(child.style);
+    final rootSpanStyle = child.textSpan?.style;
+    if (rootSpanStyle != null) {
+      // TextSpan.build() pushes styles onto the native paragraph builder's
+      // style stack, where unset fields always inherit from the parent
+      // regardless of TextStyle.inherit — unlike TextStyle.merge(), which
+      // discards the base style entirely when inherit is false. Force
+      // inherit here so ancestor fields (e.g. fontSize) survive the merge
+      // the same way they'd survive real rendering.
+      style = style.merge(rootSpanStyle.copyWith(inherit: true));
+    }
+    final color = style.color ?? _fallbackColor;
 
-    return SkeletonBone(
-      color: color,
-      width: width ?? (data.length * fontSize * 0.55),
-      height: fontSize * 1.2,
-      borderRadius: BorderRadius.circular(fontSize / 3),
+    final textScaler = child.textScaler ?? MediaQuery.textScalerOf(context);
+    final maxLines = child.maxLines ?? defaultTextStyle.maxLines;
+    final softWrap = child.softWrap ?? defaultTextStyle.softWrap;
+
+    if (width != null) {
+      return _bones(
+        context,
+        style,
+        color,
+        textScaler,
+        maxLines,
+        softWrap,
+        width!,
+      );
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) => _bones(
+        context,
+        style,
+        color,
+        textScaler,
+        maxLines,
+        softWrap,
+        constraints.hasBoundedWidth ? constraints.maxWidth : double.infinity,
+      ),
+    );
+  }
+
+  Widget _bones(
+    BuildContext context,
+    TextStyle style,
+    Color color,
+    TextScaler textScaler,
+    int? maxLines,
+    bool softWrap,
+    double maxWidth,
+  ) {
+    final textDirection = child.textDirection ?? Directionality.of(context);
+    final painter = TextPainter(
+      text: TextSpan(
+        style: style,
+        text: child.data,
+        children: child.textSpan != null ? [child.textSpan!] : null,
+      ),
+      textDirection: textDirection,
+      textScaler: textScaler,
+      maxLines: maxLines,
+    )..layout(maxWidth: softWrap ? maxWidth : double.infinity);
+    final lines = painter.computeLineMetrics();
+    painter.dispose();
+
+    final fontSize = textScaler.scale(style.fontSize ?? _fallbackFontSize);
+    final radius = BorderRadius.circular(fontSize / 3);
+    if (lines.isEmpty) {
+      return SkeletonBone(
+        color: color,
+        width: 0,
+        height: fontSize,
+        borderRadius: radius,
+      );
+    }
+
+    return Column(
+      textDirection: textDirection,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < lines.length; i++) ...[
+          if (i > 0) const SizedBox(height: _lineGap),
+          SkeletonBone(
+            color: color,
+            width: lines[i].width,
+            height: fontSize * 1.2,
+            borderRadius: radius,
+          ),
+        ],
+      ],
     );
   }
 }
