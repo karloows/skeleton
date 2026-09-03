@@ -13,11 +13,15 @@ Repo-local skills live here:
 
 ## Commands
 
+This repo pins its Flutter SDK with [fvm](https://fvm.app) (see `.fvmrc`).
+Use `fvm flutter` / `fvm dart` instead of the global `flutter` / `dart` if
+fvm is installed.
+
 ```sh
-flutter pub get
-flutter analyze
-flutter test
-dart format .
+fvm flutter pub get
+fvm flutter analyze
+fvm flutter test
+fvm dart format .
 ```
 
 This repo now has `release-please` in `.github/workflows/release-please.yml`
