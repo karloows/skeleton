@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:skeleton/skeleton.dart';
+import 'package:skeleton_tint/skeleton_tint.dart';
 
 class _TestImageProvider extends ImageProvider<String> {
   const _TestImageProvider({this.size = const Size(100, 100), this.scale = 1});
