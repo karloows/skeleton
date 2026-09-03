@@ -35,6 +35,33 @@ class _TestImageProvider extends ImageProvider<String> {
   }
 }
 
+class _ConfigSensitiveImageProvider extends ImageProvider<String> {
+  const _ConfigSensitiveImageProvider();
+
+  @override
+  Future<String> obtainKey(ImageConfiguration configuration) async =>
+      'config-image-${configuration.devicePixelRatio}';
+
+  @override
+  ImageStreamCompleter loadImage(String key, ImageDecoderCallback decode) =>
+      OneFrameImageStreamCompleter(_loadFrame(key));
+
+  Future<ImageInfo> _loadFrame(String key) async {
+    final color = key.endsWith('2.0')
+        ? const Color(0xFF0000FF)
+        : const Color(0xFFFF0000);
+    final recorder = ui.PictureRecorder();
+    final canvas = ui.Canvas(recorder);
+    canvas.drawRect(
+      const Rect.fromLTWH(0, 0, 10, 10),
+      ui.Paint()..color = color,
+    );
+    final picture = recorder.endRecording();
+    final image = await picture.toImage(10, 10);
+    return ImageInfo(image: image, scale: 1);
+  }
+}
+
 void main() {
   testWidgets('SkeletonImage uses fallback color on first frame', (
     tester,
@@ -95,4 +122,41 @@ void main() {
 
     expect(tester.getSize(find.byType(SkeletonBone)), const Size(60, 40));
   });
+
+  testWidgets(
+    'SkeletonImage resamples when the inherited ImageConfiguration changes '
+    'variant, and ignores the stale in-flight sample',
+    (tester) async {
+      Widget buildFor(double devicePixelRatio) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: MediaQuery(
+          data: MediaQueryData(devicePixelRatio: devicePixelRatio),
+          child: const Skeleton(
+            loading: true,
+            child: SkeletonImage(image: _ConfigSensitiveImageProvider()),
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildFor(1));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump();
+      expect(
+        tester.widget<SkeletonBone>(find.byType(SkeletonBone)).color,
+        const Color(0xFFFF0000),
+      );
+
+      await tester.pumpWidget(buildFor(2));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump();
+      expect(
+        tester.widget<SkeletonBone>(find.byType(SkeletonBone)).color,
+        const Color(0xFF0000FF),
+      );
+    },
+  );
 }
