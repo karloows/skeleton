@@ -295,4 +295,26 @@ void main() {
       expect(longWidth, greaterThan(shortWidth ?? 0));
     },
   );
+
+  testWidgets('SkeletonText uses an explicit borderRadius over the default', (
+    tester,
+  ) async {
+    const pill = BorderRadius.all(Radius.circular(999));
+
+    await tester.pumpWidget(
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Skeleton(
+          loading: true,
+          child: SkeletonText(
+            borderRadius: pill,
+            child: Text('\$9.99', style: TextStyle(fontSize: 16)),
+          ),
+        ),
+      ),
+    );
+
+    final bone = tester.widget<SkeletonBone>(find.byType(SkeletonBone));
+    expect(bone.borderRadius, pill);
+  });
 }

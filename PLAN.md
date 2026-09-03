@@ -116,12 +116,22 @@ Scaffolded now:
 Instead of generic rectangles/circles derived purely from bounding boxes,
 infer semantic bone shapes from widget *type* and common patterns:
 
-- `CircleAvatar` / avatar-shaped images → circle bone.
-- Price-tag-like text (currency-prefixed short text) → pill bone.
-- Star-rating rows → a row of small circle bones.
-- Keep the type→shape mapping small and extensible (a lookup table, not a
-  plugin system) — add cases as real usage demands them, do not
-  pre-build a big taxonomy.
+- `CircleAvatar` / avatar-shaped images → circle bone. Already covered:
+  `SkeletonImage(width: d, height: d, borderRadius: BorderRadius.circular(d
+  / 2))` — no new API needed.
+- Star-rating rows → a row of small circle bones. Already covered: compose
+  `SkeletonBone`s with a circular `borderRadius` inside a `Row` — no new
+  widget needed.
+- Price-tag-like text → pill bone. `SkeletonText` didn't expose a way to
+  override its bone shape at all (unlike the other three widgets, which
+  all already take `borderRadius`). Scaffolded: `SkeletonText` now takes
+  an optional `borderRadius` too, defaulting to its existing font-scaled
+  radius. The package doesn't sniff "is this a price tag" itself (that's
+  app-level judgement, e.g. a currency-prefix regex would be fragile
+  across locales) — the caller decides and passes a large radius.
+- No auto-detection lookup table was built — the three cases above don't
+  need one now that `borderRadius` is consistent across all four widgets.
+  Add one only if a real case shows up that isn't just "pick a radius."
 
 ### 4. Diff-based skeleton updates
 

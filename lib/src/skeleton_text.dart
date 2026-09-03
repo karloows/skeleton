@@ -42,6 +42,7 @@ class SkeletonText extends StatelessWidget {
     required this.child,
     this.width,
     this.preview,
+    this.borderRadius,
   });
 
   /// The real [Text] widget the bone replaces.
@@ -59,6 +60,11 @@ class SkeletonText extends StatelessWidget {
   /// length as soon as it's known, even before [child] itself is rebuilt
   /// with the final string.
   final ValueListenable<String?>? preview;
+
+  /// Bone corner radius. Defaults to a small radius scaled from the font
+  /// size; pass `BorderRadius.circular(999)` for a full pill shape (e.g.
+  /// price-tag-like text).
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +170,7 @@ class SkeletonText extends StatelessWidget {
     painter.dispose();
 
     final fontSize = textScaler.scale(style.fontSize ?? _fallbackFontSize);
-    final radius = BorderRadius.circular(fontSize / 3);
+    final radius = borderRadius ?? BorderRadius.circular(fontSize / 3);
     if (lines.isEmpty) {
       return SkeletonBone(
         color: color,
