@@ -1,4 +1,4 @@
-name: skeleton
+name: skeleton_tint
 description: Color-matched skeleton loading widgets for Flutter that match the color of the content they replace.
 version: 0.1.0
 homepage: https://github.com/karloows/skeleton

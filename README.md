@@ -1,6 +1,6 @@
-# Skeleton
+# Skeleton Tint
 
-[![pub package](https://img.shields.io/pub/v/skeleton.svg)](https://pub.dev/packages/skeleton)
+[![pub package](https://img.shields.io/pub/v/skeleton_tint.svg)](https://pub.dev/packages/skeleton_tint)
 [![license](https://img.shields.io/github/license/karloows/skeleton)](LICENSE)
 
 Tired of skeleton loaders that flash gray then pop into the real colors?
@@ -37,20 +37,20 @@ generic placeholder box.
 Add the package to `pubspec.yaml`
 
 ```bash
-flutter pub add skeleton
+flutter pub add skeleton_tint
 ```
 
 or
 
 ```yaml
 dependencies:
-  skeleton: ^0.1.0 # x-release-please-version
+  skeleton_tint: ^0.1.0 # x-release-please-version
 ```
 
 Then import the package.
 
 ```dart
-import 'package:skeleton/skeleton.dart';
+import 'package:skeleton_tint/skeleton_tint.dart';
 ```
 
 Wrap a subtree with `Skeleton` and swap in the color-matched widgets:
@@ -90,7 +90,7 @@ the real widget automatically.
 ### Widget options
 
 Every property below is optional unless marked required; full docs are on
-each constructor and on [pub.dev](https://pub.dev/documentation/skeleton/latest/).
+each constructor and on [pub.dev](https://pub.dev/documentation/skeleton_tint/latest/).
 
 | Widget | Property | Type | Default | Notes |
 | :----- | :------- | :--- | :------ | :---- |

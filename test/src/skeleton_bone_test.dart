@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:skeleton/skeleton.dart';
+import 'package:skeleton_tint/skeleton_tint.dart';
 
 void main() {
   testWidgets('SkeletonBone fills bounded constraints when size is omitted', (

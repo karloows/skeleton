@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skeleton/skeleton.dart';
+import 'package:skeleton_tint/skeleton_tint.dart';
 
 void main() {
   runApp(const MainApp());
