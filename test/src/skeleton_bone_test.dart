@@ -8,13 +8,13 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      Directionality(
+      const Directionality(
         textDirection: TextDirection.ltr,
         child: Center(
           child: SizedBox(
             width: 120,
             height: 80,
-            child: SkeletonBone(color: const Color(0xFF000000)),
+            child: SkeletonBone(color: Color(0xFF000000)),
           ),
         ),
       ),
@@ -26,14 +26,14 @@ void main() {
   testWidgets('SkeletonBone falls back to a fixed extent under unbounded '
       'constraints', (tester) async {
     await tester.pumpWidget(
-      Directionality(
+      const Directionality(
         textDirection: TextDirection.ltr,
         child: OverflowBox(
           minWidth: 0,
           maxWidth: double.infinity,
           minHeight: 0,
           maxHeight: double.infinity,
-          child: SkeletonBone(color: const Color(0xFF000000)),
+          child: SkeletonBone(color: Color(0xFF000000)),
         ),
       ),
     );
@@ -44,14 +44,10 @@ void main() {
   testWidgets('SkeletonBone honors an explicit size over the bounded '
       'constraint', (tester) async {
     await tester.pumpWidget(
-      Directionality(
+      const Directionality(
         textDirection: TextDirection.ltr,
         child: Center(
-          child: SkeletonBone(
-            color: const Color(0xFF000000),
-            width: 30,
-            height: 20,
-          ),
+          child: SkeletonBone(color: Color(0xFF000000), width: 30, height: 20),
         ),
       ),
     );

@@ -31,6 +31,7 @@ const _fallbackColor = Color(0xFFBDBDBD);
 /// no extra dependency) and cached for the widget's lifetime. Until the
 /// sample resolves, the bone falls back to a neutral gray.
 class SkeletonImage extends StatefulWidget {
+  /// Creates a bone sampled from [image]'s average color while loading.
   const SkeletonImage({
     super.key,
     required this.image,
@@ -40,14 +41,21 @@ class SkeletonImage extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
   });
 
+  /// The real image; sampled once per instance for its average color.
   final ImageProvider image;
 
   /// Bone size while loading. When omitted, matches [image]'s own decoded
   /// pixel dimensions once known; until then, falls back to filling the
   /// space the parent gives it, same as [SkeletonBone].
   final double? width;
+
+  /// Bone height. Same fallback behavior as [width].
   final double? height;
+
+  /// Forwarded to the real [Image] once loaded.
   final BoxFit? fit;
+
+  /// Bone corner radius, applied to both the bone and the real image.
   final BorderRadius borderRadius;
 
   @override

@@ -13,8 +13,8 @@ void main() {
         loading: loading,
         child: SkeletonBox(
           child: Container(
-            key: Key('real-child'),
-            color: Color(0xFFAA00AA),
+            key: const Key('real-child'),
+            color: const Color(0xFFAA00AA),
             width: 40,
             height: 40,
           ),

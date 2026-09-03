@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart' show BuildContext, InheritedWidget;
 /// Wrap a screen or section once with `Skeleton(loading: ..., child: ...)`;
 /// descendants like `SkeletonText` read the flag via [Skeleton.of].
 class Skeleton extends InheritedWidget {
+  /// Creates a scope that marks [child]'s subtree as loading or not.
   const Skeleton({super.key, required this.loading, required super.child});
 
   /// Whether descendants should render their skeleton bone instead of the

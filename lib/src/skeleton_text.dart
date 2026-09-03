@@ -36,6 +36,7 @@ const _lineGap = 6.0;
 /// line's width — not just its color. Bar height and inter-line spacing
 /// are fixed, readable defaults rather than exact font metrics.
 class SkeletonText extends StatelessWidget {
+  /// Creates a bone that swaps in for [child] while loading.
   const SkeletonText({
     super.key,
     required this.child,
@@ -43,6 +44,7 @@ class SkeletonText extends StatelessWidget {
     this.preview,
   });
 
+  /// The real [Text] widget the bone replaces.
   final Text child;
 
   /// Max width available for wrapping, matching how [child] would wrap.

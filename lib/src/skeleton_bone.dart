@@ -26,6 +26,7 @@ const _fallbackExtent = 100.0;
 /// from the real content and render it through this bone. Use it directly
 /// only when building a custom color-matched bone of your own.
 class SkeletonBone extends StatefulWidget {
+  /// Creates a shimmering bone in [color], sized by [width]/[height].
   const SkeletonBone({
     super.key,
     required this.color,
@@ -43,6 +44,8 @@ class SkeletonBone extends StatefulWidget {
 
   /// Bone height. Same fallback behavior as [width].
   final double? height;
+
+  /// Bone corner radius.
   final BorderRadius borderRadius;
 
   @override

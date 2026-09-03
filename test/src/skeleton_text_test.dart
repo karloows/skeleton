@@ -274,8 +274,8 @@ void main() {
             loading: true,
             child: SkeletonText(
               // Real content isn't known yet — only the preview is.
-              child: const Text('', style: style),
               preview: preview,
+              child: const Text('', style: style),
             ),
           ),
         ),
