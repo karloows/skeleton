@@ -49,7 +49,7 @@ Skeleton(loading: isLoading, style: SkeletonStyle.pulse, child: ...);
 ## Demo
 
 <p align="center">
-  <img src="demo/record.gif" alt="Skeleton loading demo" />
+  <img src="demo/record.gif" alt="Skeleton loading demo" width="280" />
 </p>
 
 ## Usage
