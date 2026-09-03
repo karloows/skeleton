@@ -14,7 +14,7 @@ Use this skill for broken behavior, exported API regressions, or test failures.
    implementation before choosing an edit point.
 3. Fix the narrowest shared root cause that matches the report.
 4. Add or update tests when the change touches non-trivial behavior.
-5. Run `flutter analyze` and `flutter test` before handoff.
+5. Run `fvm flutter analyze` and `fvm flutter test` before handoff.
 
 ## Bias
 

@@ -31,6 +31,6 @@ Use this skill when working on the `skeleton` package.
 Run:
 
 ```sh
-flutter analyze
-flutter test
+fvm flutter analyze
+fvm flutter test
 ```

@@ -16,9 +16,9 @@ Use this skill when the task is to add, update, or repair tests.
 
 ## Validation Flow
 
-1. Run focused `flutter test` commands while iterating when useful.
-2. Finish with `flutter analyze`.
-3. Finish with `flutter test`.
+1. Run focused `fvm flutter test` commands while iterating when useful.
+2. Finish with `fvm flutter analyze`.
+3. Finish with `fvm flutter test`.
 
 ## Read These
 
