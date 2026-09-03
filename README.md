@@ -34,7 +34,7 @@ ambient `Skeleton` to change it for a whole subtree, or on an individual
 that one:
 
 ```dart
-Skeleton(loading: isLoading, style: SkeletonStyle.pulse, child: ...);
+Skeleton(loading: isLoading, style: SkeletonStyle.pulse, child: const SizedBox());
 ```
 
 | `SkeletonStyle` | Effect |

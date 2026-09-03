@@ -92,8 +92,18 @@ void main() {
 
     await tester.pumpWidget(build(SkeletonStyle.solid));
     await tester.pumpWidget(build(SkeletonStyle.pulse));
-    await tester.pump(const Duration(milliseconds: 600));
 
-    expect(find.byType(SkeletonBone), findsOneWidget);
+    Color? colorAt() =>
+        (tester.widget<DecoratedBox>(find.byType(DecoratedBox)).decoration
+                as BoxDecoration)
+            .color;
+
+    final first = colorAt();
+    await tester.pump(const Duration(milliseconds: 300));
+    final second = colorAt();
+
+    expect(first, isNotNull);
+    expect(second, isNotNull);
+    expect(first, isNot(equals(second)));
   });
 }
