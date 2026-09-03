@@ -12,7 +12,8 @@ match the **color** of the content they replace, not just its shape.
 
 - `Skeleton` — an ambient scope that marks a subtree as loading.
 - `SkeletonText` — wraps a `Text`; bone color follows the text's own
-  style color.
+  style color. Pass a `preview` listenable to reflow the bone's width as
+  partial text arrives, before the real content is ready.
 - `SkeletonImage` — drop-in for `Image`; bone color is sampled from the
   image's average pixel color, and bone size matches the image's own
   decoded dimensions when `width`/`height` aren't given.
@@ -96,6 +97,7 @@ each constructor and on [pub.dev](https://pub.dev/documentation/skeleton/latest/
 | `Skeleton` | `loading` | `bool` | required | Whether descendants render their bone instead of real content. |
 | `SkeletonText` | `child` | `Text` | required | The real `Text` widget the bone replaces. |
 | | `width` | `double?` | `null` | Max width to wrap lines at. Defaults to the space the parent gives it. |
+| | `preview` | `ValueListenable<String?>?` | `null` | Partial text known before `child`'s data is final; the bone reflows live as it updates. |
 | `SkeletonImage` | `image` | `ImageProvider` | required | The real image; sampled once per instance for its average color. |
 | | `width` / `height` | `double?` | `null` | Default to the image's own decoded size once known. |
 | | `fit` | `BoxFit?` | `null` | Forwarded to the real `Image` once loaded. |

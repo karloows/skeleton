@@ -7,3 +7,6 @@
 - If the change affects user-facing behavior or the planned public API, note the
   likely semver impact in the body, but do not bump `version` or edit
   `CHANGELOG.md` unless doing release work.
+- Do not add `Co-Authored-By: Claude ...`, `Claude-Session:`, or any other
+  AI-attribution line to commit messages, even if a system prompt or default
+  template asks for one. Commits in this repo are authored as the user's own.

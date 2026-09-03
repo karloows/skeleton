@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/widgets.dart'
     show
         BorderRadius,
@@ -17,6 +18,7 @@ import 'package:flutter/widgets.dart'
         TextScaler,
         TextSpan,
         TextStyle,
+        ValueListenableBuilder,
         Widget;
 
 import 'skeleton_bone.dart' show SkeletonBone;
@@ -34,13 +36,29 @@ const _lineGap = 6.0;
 /// line's width — not just its color. Bar height and inter-line spacing
 /// are fixed, readable defaults rather than exact font metrics.
 class SkeletonText extends StatelessWidget {
-  const SkeletonText({super.key, required this.child, this.width});
+  /// Creates a bone that swaps in for [child] while loading.
+  const SkeletonText({
+    super.key,
+    required this.child,
+    this.width,
+    this.preview,
+  });
 
+  /// The real [Text] widget the bone replaces.
   final Text child;
 
   /// Max width available for wrapping, matching how [child] would wrap.
   /// When omitted, uses the space the parent gives it.
   final double? width;
+
+  /// A source of partial text, known before [child]'s own data is final.
+  ///
+  /// While loading, the bone is measured against `preview.value` instead of
+  /// `child.data` whenever it's non-null, and re-measures live as the
+  /// listenable updates — so the bone can narrow or grow to match the real
+  /// length as soon as it's known, even before [child] itself is rebuilt
+  /// with the final string.
+  final ValueListenable<String?>? preview;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +84,33 @@ class SkeletonText extends StatelessWidget {
     final maxLines = child.maxLines ?? defaultTextStyle.maxLines;
     final softWrap = child.softWrap ?? defaultTextStyle.softWrap;
 
+    final preview = this.preview;
+    if (preview == null) {
+      return _layout(context, style, color, textScaler, maxLines, softWrap);
+    }
+    return ValueListenableBuilder<String?>(
+      valueListenable: preview,
+      builder: (context, previewText, _) => _layout(
+        context,
+        style,
+        color,
+        textScaler,
+        maxLines,
+        softWrap,
+        text: previewText,
+      ),
+    );
+  }
+
+  Widget _layout(
+    BuildContext context,
+    TextStyle style,
+    Color color,
+    TextScaler textScaler,
+    int? maxLines,
+    bool softWrap, {
+    String? text,
+  }) {
     if (width != null) {
       return _bones(
         context,
@@ -75,6 +120,7 @@ class SkeletonText extends StatelessWidget {
         maxLines,
         softWrap,
         width!,
+        text: text,
       );
     }
     return LayoutBuilder(
@@ -86,6 +132,7 @@ class SkeletonText extends StatelessWidget {
         maxLines,
         softWrap,
         constraints.hasBoundedWidth ? constraints.maxWidth : double.infinity,
+        text: text,
       ),
     );
   }
@@ -97,14 +144,17 @@ class SkeletonText extends StatelessWidget {
     TextScaler textScaler,
     int? maxLines,
     bool softWrap,
-    double maxWidth,
-  ) {
+    double maxWidth, {
+    String? text,
+  }) {
     final textDirection = child.textDirection ?? Directionality.of(context);
     final painter = TextPainter(
       text: TextSpan(
         style: style,
-        text: child.data,
-        children: child.textSpan != null ? [child.textSpan!] : null,
+        text: text ?? child.data,
+        children: text == null && child.textSpan != null
+            ? [child.textSpan!]
+            : null,
       ),
       textDirection: textDirection,
       textScaler: textScaler,

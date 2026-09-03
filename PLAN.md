@@ -97,16 +97,19 @@ flat theme shimmer color.
 Bones resize/reshape live as real data becomes known, instead of being a
 static placeholder that gets replaced wholesale once loading finishes.
 
-- Example: a text bone starts at a generic guessed width, then narrows or
-  grows to match the actual line count/length as soon as the real string
-  arrives (even before the widget fully renders).
-- Example: a list of bones grows/shrinks to match the real item count as
-  soon as that count is known, rather than always showing a fixed guess
-  count.
-- Requires a way to feed "partial knowledge" into the skeleton (e.g. a
-  `ValueListenable`/stream of metadata separate from the full content) —
-  design this API only when this niche is implemented, do not
-  speculatively build hooks for it while working on niche 1.
+Scaffolded now:
+
+- `SkeletonText` takes an optional `preview` (`ValueListenable<String?>`).
+  While loading, the bone measures against `preview.value` instead of
+  `child.data` whenever it's non-null, and re-measures on every update via
+  `ValueListenableBuilder` — so it narrows or grows to match the real
+  length as soon as that's known, even before `child` itself is rebuilt
+  with the final string.
+- The "list of bones grows/shrinks to match the real item count" case
+  needs no new widget: compose Flutter's own `ValueListenableBuilder`
+  around a `List.generate` of `SkeletonBone`s, keyed off a
+  `ValueListenable<int?>` item count. Existing primitives already cover
+  it.
 
 ### 3. Per-widget-type smart bones
 

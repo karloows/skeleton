@@ -17,6 +17,7 @@ const _fallbackColor = Color(0xFF9E9E9E);
 /// [Container.color] and size while the nearest [Skeleton] is loading, and
 /// [child] itself otherwise.
 class SkeletonBox extends StatelessWidget {
+  /// Creates a bone that swaps in for [child] while loading.
   const SkeletonBox({
     super.key,
     required this.child,
@@ -26,6 +27,7 @@ class SkeletonBox extends StatelessWidget {
     this.borderRadius = BorderRadius.zero,
   });
 
+  /// The real [Container] the bone replaces.
   final Container child;
 
   /// The bone's color while loading. Defaults to [child]'s own
@@ -36,7 +38,11 @@ class SkeletonBox extends StatelessWidget {
   /// (from its `width`/`height`/`constraints`) when set; otherwise fills
   /// the space the parent gives it, same as [SkeletonBone].
   final double? width;
+
+  /// Bone height. Same fallback behavior as [width].
   final double? height;
+
+  /// Bone corner radius.
   final BorderRadius borderRadius;
 
   @override
