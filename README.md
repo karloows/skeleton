@@ -1,16 +1,12 @@
-# skeleton
+# Skeleton
 
-Skeleton loading widgets for Flutter that match the **color** of the
-content they replace, not just its shape. A text placeholder is tinted
-with the text's own color, an image placeholder is tinted with that
-image's average color (initially a neutral gray, then asynchronously
-updated when sampling completes), and a box placeholder uses the same fill
-color as the real content — so the loading state fades into the real UI
-instead of flashing from generic gray to full color.
+[![pub package](https://img.shields.io/pub/v/skeleton.svg)](https://pub.dev/packages/skeleton)
+[![license](https://img.shields.io/github/license/karloows/skeleton)](LICENSE)
 
-See [PLAN.md](PLAN.md) for the full roadmap, including planned niches
-beyond color-matching (async-aware reflow, per-widget-type smart bones,
-diff-based list updates, and zero-flash first paint).
+Tired of skeleton loaders that flash gray then pop into the real colors?
+
+This package keeps it small: color-matched Flutter skeleton widgets that
+match the **color** of the content they replace, not just its shape.
 
 ## Features
 
@@ -22,12 +18,41 @@ diff-based list updates, and zero-flash first paint).
   decoded dimensions when `width`/`height` aren't given.
 - `SkeletonBox` — wraps a `Container`; bone color and size follow the
   container's own `color`/`width`/`height`.
+- `SkeletonBone` — the low-level shimmer bone used to build custom
+  color-matched placeholders.
 
 `width`/`height` are optional everywhere — omit them and each widget sizes
 itself from its content (or the space its parent gives it) instead of a
 generic placeholder box.
 
+## Demo
+
+<p align="center">
+  <img src="demo/record.gif" alt="Skeleton loading demo" />
+</p>
+
 ## Usage
+
+Add the package to `pubspec.yaml`
+
+```bash
+flutter pub add skeleton
+```
+
+or
+
+```yaml
+dependencies:
+  skeleton: ^0.0.1 # x-release-please-version
+```
+
+Then import the package.
+
+```dart
+import 'package:skeleton/skeleton.dart';
+```
+
+Wrap a subtree with `Skeleton` and swap in the color-matched widgets:
 
 ```dart
 Skeleton(
@@ -61,7 +86,67 @@ Toggle `loading` on the ambient `Skeleton` and every descendant
 `SkeletonText`/`SkeletonImage`/`SkeletonBox` switches between its bone and
 the real widget automatically.
 
-## Additional information
+### Widget options
 
-Still pre-1.0 and under active development — see [PLAN.md](PLAN.md) for
-what's built and what's planned next.
+Every property below is optional unless marked required; full docs are on
+each constructor and on [pub.dev](https://pub.dev/documentation/skeleton/latest/).
+
+| Widget | Property | Type | Default | Notes |
+| :----- | :------- | :--- | :------ | :---- |
+| `Skeleton` | `loading` | `bool` | required | Whether descendants render their bone instead of real content. |
+| `SkeletonText` | `child` | `Text` | required | The real `Text` widget the bone replaces. |
+| | `width` | `double?` | `null` | Max width to wrap lines at. Defaults to the space the parent gives it. |
+| `SkeletonImage` | `image` | `ImageProvider` | required | The real image; sampled once per instance for its average color. |
+| | `width` / `height` | `double?` | `null` | Default to the image's own decoded size once known. |
+| | `fit` | `BoxFit?` | `null` | Forwarded to the real `Image` once loaded. |
+| | `borderRadius` | `BorderRadius` | `BorderRadius.zero` | Applied to both the bone and the real image. |
+| `SkeletonBox` | `child` | `Container` | required | The real `Container` the bone replaces. |
+| | `color` | `Color?` | `null` | Defaults to `child`'s own `Container.color`. |
+| | `width` / `height` | `double?` | `null` | Default to `child`'s own tight size, if any. |
+| | `borderRadius` | `BorderRadius` | `BorderRadius.zero` | Bone corner radius. |
+| `SkeletonBone` | `color` | `Color` | required | The bone's base shimmer color. |
+| | `width` / `height` | `double?` | `null` | Fill the parent's bounded size, or a fixed extent when unbounded. |
+| | `borderRadius` | `BorderRadius` | `BorderRadius.circular(4)` | Bone corner radius. |
+
+## Example App
+
+The repo includes a runnable example in [`example/`](example/) with
+**Loading**/**Loaded** tabs to compare the bone and real content side by
+side.
+
+```bash
+cd example
+fvm flutter run
+```
+
+## Development
+
+This project uses [FVM](https://fvm.app/) to pin the Flutter SDK (see
+`.fvmrc`).
+
+```bash
+fvm flutter pub get
+fvm flutter analyze
+fvm flutter test
+```
+
+## Contributing
+
+Pull requests are welcome. If you change public behavior or the documented
+API, keep the README and example app in sync. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## Issues
+
+Bug reports and feature requests are best opened in the
+[GitHub issue tracker](https://github.com/karloows/skeleton/issues).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Contributors
+
+<a href="https://github.com/karloows/skeleton/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=karloows/skeleton" />
+</a>
