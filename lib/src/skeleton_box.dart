@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Widget;
 
-import 'skeleton_bone.dart' show SkeletonBone;
+import 'skeleton_bone.dart' show SkeletonBone, SkeletonStyle;
 import 'skeleton_scope.dart' show Skeleton;
 
 const _fallbackColor = Color(0xFF9E9E9E);
@@ -25,6 +25,7 @@ class SkeletonBox extends StatelessWidget {
     this.width,
     this.height,
     this.borderRadius = BorderRadius.zero,
+    this.style,
   });
 
   /// The real [Container] the bone replaces.
@@ -45,6 +46,10 @@ class SkeletonBox extends StatelessWidget {
   /// Bone corner radius.
   final BorderRadius borderRadius;
 
+  /// The bone's animation style. Defaults to the nearest [Skeleton]'s
+  /// [Skeleton.style].
+  final SkeletonStyle? style;
+
   @override
   Widget build(BuildContext context) {
     if (!Skeleton.of(context)) {
@@ -63,6 +68,7 @@ class SkeletonBox extends StatelessWidget {
               ? constraints!.maxHeight
               : null),
       borderRadius: borderRadius,
+      style: style ?? Skeleton.styleOf(context),
     );
     final margin = child.margin;
     return margin == null ? bone : Padding(padding: margin, child: bone);

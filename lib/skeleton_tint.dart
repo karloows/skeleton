@@ -11,7 +11,7 @@
 ///   color-matched placeholders.
 library;
 
-export 'src/skeleton_bone.dart' show SkeletonBone;
+export 'src/skeleton_bone.dart' show SkeletonBone, SkeletonStyle;
 export 'src/skeleton_box.dart' show SkeletonBox;
 export 'src/skeleton_image.dart' show SkeletonImage;
 export 'src/skeleton_scope.dart' show Skeleton;

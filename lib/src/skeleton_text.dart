@@ -21,7 +21,7 @@ import 'package:flutter/widgets.dart'
         ValueListenableBuilder,
         Widget;
 
-import 'skeleton_bone.dart' show SkeletonBone;
+import 'skeleton_bone.dart' show SkeletonBone, SkeletonStyle;
 import 'skeleton_scope.dart' show Skeleton;
 
 const _fallbackColor = Color(0xFF9E9E9E);
@@ -43,6 +43,7 @@ class SkeletonText extends StatelessWidget {
     this.width,
     this.preview,
     this.borderRadius,
+    this.style,
   });
 
   /// The real [Text] widget the bone replaces.
@@ -65,6 +66,10 @@ class SkeletonText extends StatelessWidget {
   /// size; pass `BorderRadius.circular(999)` for a full pill shape (e.g.
   /// price-tag-like text).
   final BorderRadius? borderRadius;
+
+  /// The bone's animation style. Defaults to the nearest [Skeleton]'s
+  /// [Skeleton.style].
+  final SkeletonStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +176,14 @@ class SkeletonText extends StatelessWidget {
 
     final fontSize = textScaler.scale(style.fontSize ?? _fallbackFontSize);
     final radius = borderRadius ?? BorderRadius.circular(fontSize / 3);
+    final boneStyle = this.style ?? Skeleton.styleOf(context);
     if (lines.isEmpty) {
       return SkeletonBone(
         color: color,
         width: 0,
         height: fontSize,
         borderRadius: radius,
+        style: boneStyle,
       );
     }
 
@@ -192,6 +199,7 @@ class SkeletonText extends StatelessWidget {
             width: lines[i].width,
             height: fontSize * 1.2,
             borderRadius: radius,
+            style: boneStyle,
           ),
         ],
       ],

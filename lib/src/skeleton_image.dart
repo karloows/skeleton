@@ -19,7 +19,7 @@ import 'package:flutter/widgets.dart'
         Widget,
         createLocalImageConfiguration;
 
-import 'skeleton_bone.dart' show SkeletonBone;
+import 'skeleton_bone.dart' show SkeletonBone, SkeletonStyle;
 import 'skeleton_scope.dart' show Skeleton;
 
 const _fallbackColor = Color(0xFFBDBDBD);
@@ -40,6 +40,7 @@ class SkeletonImage extends StatefulWidget {
     this.height,
     this.fit,
     this.borderRadius = BorderRadius.zero,
+    this.style,
   });
 
   /// The real image; sampled once per instance for its average color.
@@ -58,6 +59,10 @@ class SkeletonImage extends StatefulWidget {
 
   /// Bone corner radius, applied to both the bone and the real image.
   final BorderRadius borderRadius;
+
+  /// The bone's animation style. Defaults to the nearest [Skeleton]'s
+  /// [Skeleton.style].
+  final SkeletonStyle? style;
 
   @override
   State<SkeletonImage> createState() => _SkeletonImageState();
@@ -169,6 +174,7 @@ class _SkeletonImageState extends State<SkeletonImage> {
       width: widget.width ?? _naturalSize?.width,
       height: widget.height ?? _naturalSize?.height,
       borderRadius: widget.borderRadius,
+      style: widget.style ?? Skeleton.styleOf(context),
     );
   }
 }
