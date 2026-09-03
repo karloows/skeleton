@@ -16,7 +16,8 @@ import 'package:flutter/widgets.dart'
         Size,
         State,
         StatefulWidget,
-        Widget;
+        Widget,
+        createLocalImageConfiguration;
 
 import 'skeleton_bone.dart' show SkeletonBone;
 import 'skeleton_scope.dart' show Skeleton;
@@ -66,14 +67,28 @@ class _SkeletonImageState extends State<SkeletonImage> {
   Color? _averageColor;
   Size? _naturalSize;
   ImageStream? _stream;
-  Object? _activeImageKey;
+  ImageConfiguration? _configuration;
+  Object? _activeToken;
   late ImageStreamListener _listener;
 
   @override
   void initState() {
     super.initState();
     _listener = ImageStreamListener(_onFrame);
-    _subscribe();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Resolves ambient config (device pixel ratio, locale, text direction,
+    // asset bundle, ...) so the sampled color matches the same image
+    // variant the real Image would render. Re-subscribes only when that
+    // config actually changes, not on every unrelated dependency update.
+    final configuration = createLocalImageConfiguration(context);
+    if (configuration != _configuration) {
+      _configuration = configuration;
+      _subscribe();
+    }
   }
 
   @override
@@ -88,22 +103,26 @@ class _SkeletonImageState extends State<SkeletonImage> {
 
   void _subscribe() {
     _stream?.removeListener(_listener);
-    _activeImageKey = widget.image;
-    _stream = widget.image.resolve(const ImageConfiguration());
+    // A fresh token per subscription (rather than widget.image identity)
+    // so a config-only resubscribe also invalidates in-flight samples from
+    // the previous stream, even when the ImageProvider instance is same.
+    final token = Object();
+    _activeToken = token;
+    _stream = widget.image.resolve(_configuration ?? ImageConfiguration.empty);
     _stream!.addListener(_listener);
   }
 
   void _onFrame(ImageInfo info, bool _) {
-    final key = _activeImageKey;
+    final token = _activeToken;
     final size = Size(
       info.image.width / info.scale,
       info.image.height / info.scale,
     );
-    if (mounted && _activeImageKey == key) {
+    if (mounted && _activeToken == token) {
       setState(() => _naturalSize = size);
     }
     _averageColorOf(info.image).then((color) {
-      if (mounted && _activeImageKey == key) {
+      if (mounted && _activeToken == token) {
         setState(() => _averageColor = color);
       }
     });
