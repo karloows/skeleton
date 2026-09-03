@@ -139,9 +139,21 @@ For lists/grids that change incrementally (pagination, infinite scroll),
 only skeletonize the new/changed items instead of re-skeletonizing the
 whole subtree on every rebuild.
 
-- Applies to `ListView`/`GridView`-style children with keys.
-- Implementation should key off existing widget keys already used by the
-  list, not introduce a new keying scheme.
+Already covered, no new API needed:
+
+- `Skeleton` is a plain `InheritedWidget`; `Skeleton.of` resolves to the
+  *nearest* ancestor scope. Wrapping each list item in its own
+  `Skeleton(key: itemKey, loading: item.loading, child: ...)` already
+  gives every item an independent loading state — old items keep
+  rendering real content while new/paginated-in items show bones,
+  with no per-item logic inside this package.
+- Diffing itself is Flutter's own element reconciliation: all four
+  widgets already forward `key` via `super.key`, so a keyed
+  `ListView.builder`/`GridView.builder` already reuses each item's
+  element/state (bone animation controllers included) across rebuilds
+  instead of rebuilding the whole list. This package doesn't need a
+  custom keying scheme — see `test/src/skeleton_scope_test.dart` for a
+  regression test locking in the nested-scope behavior this depends on.
 
 ### 5. Zero-flash first paint
 
@@ -149,16 +161,16 @@ Avoid a frame where the real widget briefly renders before the skeleton
 wrapper kicks in (a known issue with runtime-wrapping approaches that must
 build the real subtree once to measure it).
 
-- Because this package uses explicit typed widgets (see Architecture
-  decision above) rather than runtime tree rewriting, this niche mostly
-  reduces to: make sure `SkeletonText`/`SkeletonBox`/`SkeletonImage`
-  decide real-vs-bone synchronously during `build()`, with no
-  post-frame swap. `SkeletonImage`'s color sampling is the one
-  async exception (it must decode a frame first) — bound how long it
-  shows the neutral fallback before investigating a snapshot/precompute
-  approach.
-- Only reach for build-time/codegen solutions if the synchronous-build
-  approach above proves insufficient in real usage.
+Already covered: `SkeletonText`/`SkeletonBox` decide real-vs-bone
+synchronously inside `build()`, with no post-frame swap — verified by the
+existing widget tests, which never pump an extra frame to see the bone
+appear. `SkeletonImage`'s color sampling is the one accepted async
+exception (documented in niche 1) — it must decode a frame first, so it
+shows the neutral fallback for that one frame. No timeout/bound was added
+for that fallback window; it's speculative until a real case shows the
+plain fallback isn't good enough. Only reach for build-time/codegen
+solutions if this synchronous-build approach proves insufficient in real
+usage.
 
 ## Priority and phasing
 
