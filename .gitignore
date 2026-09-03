@@ -32,3 +32,6 @@ migrate_working_dir/
 
 # FVM Version Cache
 .fvm/
+
+# Claude Code local (personal) settings
+.claude/settings.local.json
