@@ -98,6 +98,7 @@ each constructor and on [pub.dev](https://pub.dev/documentation/skeleton/latest/
 | `SkeletonText` | `child` | `Text` | required | The real `Text` widget the bone replaces. |
 | | `width` | `double?` | `null` | Max width to wrap lines at. Defaults to the space the parent gives it. |
 | | `preview` | `ValueListenable<String?>?` | `null` | Partial text known before `child`'s data is final; the bone reflows live as it updates. |
+| | `borderRadius` | `BorderRadius?` | `null` | Defaults to a small radius scaled from font size; pass a large radius for a pill shape (e.g. price-tag-like text). |
 | `SkeletonImage` | `image` | `ImageProvider` | required | The real image; sampled once per instance for its average color. |
 | | `width` / `height` | `double?` | `null` | Default to the image's own decoded size once known. |
 | | `fit` | `BoxFit?` | `null` | Forwarded to the real `Image` once loaded. |
