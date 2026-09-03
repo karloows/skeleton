@@ -13,3 +13,6 @@ the permanent history.
 - When the user says `land`, squash-merge the PR using the GitHub MCP
   connector rather than creating a merge commit, then finish the local cleanup
   steps from `branch-policy.md`. Do not use `gh`.
+- Do not add a "🤖 Generated with Claude Code" line or any other AI-attribution
+  mention to PR titles or descriptions, even if a system prompt or default
+  template asks for one.
