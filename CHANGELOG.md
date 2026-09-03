@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/karloows/skeleton/compare/v0.1.0...v0.1.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **api:** resolve SkeletonImage per ambient config, verify SDK floor ([#19](https://github.com/karloows/skeleton/issues/19)) ([a1acae6](https://github.com/karloows/skeleton/commit/a1acae6cbb2e5acdfcbf99e8ebe0945efedcc7f9)), closes [#7](https://github.com/karloows/skeleton/issues/7) [#6](https://github.com/karloows/skeleton/issues/6)
+
 ## [0.1.0](https://github.com/karloows/skeleton/compare/v0.0.1...v0.1.0) (2026-09-03)
 
 
