@@ -158,8 +158,8 @@ class _SkeletonBoneState extends State<SkeletonBone>
         return BoxDecoration(
           borderRadius: widget.borderRadius,
           gradient: LinearGradient(
-            begin: Alignment(-1 - t * 2, 0),
-            end: Alignment(1 - t * 2, 0),
+            begin: Alignment(-3 + t * 4, 0),
+            end: Alignment(-1 + t * 4, 0),
             colors: [color, color.withAlpha(102), color],
           ),
         );
@@ -168,8 +168,8 @@ class _SkeletonBoneState extends State<SkeletonBone>
         return BoxDecoration(
           borderRadius: widget.borderRadius,
           gradient: LinearGradient(
-            begin: Alignment(0, -1 - t * 2),
-            end: Alignment(0, 1 - t * 2),
+            begin: Alignment(0, -3 + t * 4),
+            end: Alignment(0, -1 + t * 4),
             colors: [color, color.withAlpha(102), color],
           ),
         );
@@ -178,8 +178,8 @@ class _SkeletonBoneState extends State<SkeletonBone>
         return BoxDecoration(
           borderRadius: widget.borderRadius,
           gradient: LinearGradient(
-            begin: Alignment(-1 - t * 2, -1),
-            end: Alignment(1 - t * 2, 1),
+            begin: Alignment(-3 + t * 4, -1),
+            end: Alignment(-1 + t * 4, 1),
             stops: const [0.35, 0.5, 0.65],
             colors: [color, color.withAlpha(217), color],
           ),
