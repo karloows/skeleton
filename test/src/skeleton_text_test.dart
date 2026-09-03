@@ -258,4 +258,41 @@ void main() {
       expect(find.byType(SkeletonBone), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'SkeletonText reflows its bone width as preview updates, before child '
+    'has real data',
+    (tester) async {
+      const style = TextStyle(fontSize: 16);
+      final preview = ValueNotifier<String?>(null);
+      addTearDown(preview.dispose);
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Skeleton(
+            loading: true,
+            child: SkeletonText(
+              // Real content isn't known yet — only the preview is.
+              child: const Text('', style: style),
+              preview: preview,
+            ),
+          ),
+        ),
+      );
+
+      final shortWidth = tester
+          .widget<SkeletonBone>(find.byType(SkeletonBone))
+          .width;
+
+      preview.value = 'A much longer string than before';
+      await tester.pump();
+
+      final longWidth = tester
+          .widget<SkeletonBone>(find.byType(SkeletonBone))
+          .width;
+
+      expect(longWidth, greaterThan(shortWidth ?? 0));
+    },
+  );
 }
