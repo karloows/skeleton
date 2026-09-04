@@ -10,55 +10,95 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Skeleton Loading Demo'),
-            elevation: 0,
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: 'Loading'),
-                Tab(text: 'Loaded'),
-              ],
-            ),
+    return const MaterialApp(home: _DemoScreen());
+  }
+}
+
+class _DemoScreen extends StatefulWidget {
+  const _DemoScreen();
+
+  @override
+  State<_DemoScreen> createState() => _DemoScreenState();
+}
+
+class _DemoScreenState extends State<_DemoScreen> {
+  SkeletonStyle _style = SkeletonStyle.shimmer;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Skeleton Loading Demo'),
+          elevation: 0,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Loading'),
+              Tab(text: 'Loaded'),
+            ],
           ),
-          body: const TabBarView(children: [_LoadingTab(), _LoadedTab()]),
+        ),
+        body: Column(
+          children: [
+            _StylePicker(
+              selected: _style,
+              onSelected: (style) => setState(() => _style = style),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _DemoList(loading: true, style: _style),
+                  _DemoList(loading: false, style: _style),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _LoadingTab extends StatelessWidget {
-  const _LoadingTab();
+class _StylePicker extends StatelessWidget {
+  const _StylePicker({required this.selected, required this.onSelected});
+
+  final SkeletonStyle selected;
+  final ValueChanged<SkeletonStyle> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Skeleton(
-      loading: true,
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _UserCard(),
-          const SizedBox(height: 16),
-          _BlogPostCard(),
-          const SizedBox(height: 16),
-          _ProductCard(),
-        ],
+    return SizedBox(
+      height: 56,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: SkeletonStyle.values.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final style = SkeletonStyle.values[index];
+          return ChoiceChip(
+            label: Text(style.name),
+            selected: style == selected,
+            onSelected: (_) => onSelected(style),
+          );
+        },
       ),
     );
   }
 }
 
-class _LoadedTab extends StatelessWidget {
-  const _LoadedTab();
+class _DemoList extends StatelessWidget {
+  const _DemoList({required this.loading, required this.style});
+
+  final bool loading;
+  final SkeletonStyle style;
 
   @override
   Widget build(BuildContext context) {
     return Skeleton(
-      loading: false,
+      loading: loading,
+      style: style,
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [

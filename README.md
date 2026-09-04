@@ -26,10 +26,30 @@ match the **color** of the content they replace, not just its shape.
 itself from its content (or the space its parent gives it) instead of a
 generic placeholder box.
 
+### Bone styles
+
+Every bone animates as a `shimmer` sweep by default. Set `style` on the
+ambient `Skeleton` to change it for a whole subtree, or on an individual
+`SkeletonText`/`SkeletonImage`/`SkeletonBox`/`SkeletonBone` to override just
+that one:
+
+```dart
+Skeleton(loading: isLoading, style: SkeletonStyle.pulse, child: const SizedBox());
+```
+
+| `SkeletonStyle` | Effect |
+| :-------------- | :----- |
+| `shimmer` | Gradient highlight sweeping left to right (default). |
+| `wave` | Gradient highlight sweeping top to bottom. |
+| `sheen` | A narrow, brighter band sweeping diagonally. |
+| `pulse` | Opacity fades in and out. |
+| `breathe` | A soft glow that grows and shrinks from the center. |
+| `solid` | A flat, unanimated fill. |
+
 ## Demo
 
 <p align="center">
-  <img src="demo/record.gif" alt="Skeleton loading demo" />
+  <img src="demo/record.gif" alt="Skeleton loading demo" width="280" />
 </p>
 
 ## Usage
@@ -95,21 +115,26 @@ each constructor and on [pub.dev](https://pub.dev/documentation/skeleton_tint/la
 | Widget | Property | Type | Default | Notes |
 | :----- | :------- | :--- | :------ | :---- |
 | `Skeleton` | `loading` | `bool` | required | Whether descendants render their bone instead of real content. |
+| | `style` | `SkeletonStyle` | `shimmer` | Default bone animation style for descendants that don't set their own `style`. |
 | `SkeletonText` | `child` | `Text` | required | The real `Text` widget the bone replaces. |
 | | `width` | `double?` | `null` | Max width to wrap lines at. Defaults to the space the parent gives it. |
 | | `preview` | `ValueListenable<String?>?` | `null` | Partial text known before `child`'s data is final; the bone reflows live as it updates. |
 | | `borderRadius` | `BorderRadius?` | `null` | Defaults to a small radius scaled from font size; pass a large radius for a pill shape (e.g. price-tag-like text). |
+| | `style` | `SkeletonStyle?` | `null` | Overrides the ambient `Skeleton.style` for this bone. |
 | `SkeletonImage` | `image` | `ImageProvider` | required | The real image; sampled once per instance for its average color. |
 | | `width` / `height` | `double?` | `null` | Default to the image's own decoded size once known. |
 | | `fit` | `BoxFit?` | `null` | Forwarded to the real `Image` once loaded. |
 | | `borderRadius` | `BorderRadius` | `BorderRadius.zero` | Applied to both the bone and the real image. |
+| | `style` | `SkeletonStyle?` | `null` | Overrides the ambient `Skeleton.style` for this bone. |
 | `SkeletonBox` | `child` | `Container` | required | The real `Container` the bone replaces. |
 | | `color` | `Color?` | `null` | Defaults to `child`'s own `Container.color`. |
 | | `width` / `height` | `double?` | `null` | Default to `child`'s own tight size, if any. |
 | | `borderRadius` | `BorderRadius` | `BorderRadius.zero` | Bone corner radius. |
+| | `style` | `SkeletonStyle?` | `null` | Overrides the ambient `Skeleton.style` for this bone. |
 | `SkeletonBone` | `color` | `Color` | required | The bone's base shimmer color. |
 | | `width` / `height` | `double?` | `null` | Fill the parent's bounded size, or a fixed extent when unbounded. |
 | | `borderRadius` | `BorderRadius` | `BorderRadius.circular(4)` | Bone corner radius. |
+| | `style` | `SkeletonStyle` | `shimmer` | See [Bone styles](#bone-styles). |
 
 ## Example App
 

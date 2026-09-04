@@ -54,4 +54,56 @@ void main() {
 
     expect(tester.getSize(find.byType(SkeletonBone)), const Size(30, 20));
   });
+
+  for (final style in SkeletonStyle.values) {
+    testWidgets('SkeletonBone renders and animates with style $style', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: SkeletonBone(
+            color: const Color(0xFF336699),
+            width: 40,
+            height: 20,
+            style: style,
+          ),
+        ),
+      );
+      expect(find.byType(SkeletonBone), findsOneWidget);
+
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.byType(SkeletonBone), findsOneWidget);
+    });
+  }
+
+  testWidgets('SkeletonBone switching away from solid resumes animating', (
+    tester,
+  ) async {
+    Widget build(SkeletonStyle style) => Directionality(
+      textDirection: TextDirection.ltr,
+      child: SkeletonBone(
+        color: const Color(0xFF336699),
+        width: 40,
+        height: 20,
+        style: style,
+      ),
+    );
+
+    await tester.pumpWidget(build(SkeletonStyle.solid));
+    await tester.pumpWidget(build(SkeletonStyle.pulse));
+
+    Color? colorAt() =>
+        (tester.widget<DecoratedBox>(find.byType(DecoratedBox)).decoration
+                as BoxDecoration)
+            .color;
+
+    final first = colorAt();
+    await tester.pump(const Duration(milliseconds: 300));
+    final second = colorAt();
+
+    expect(first, isNotNull);
+    expect(second, isNotNull);
+    expect(first, isNot(equals(second)));
+  });
 }
