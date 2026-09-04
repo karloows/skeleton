@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/karloows/skeleton/compare/v0.1.0...v0.2.0) (2026-09-04)
+
+
+### Features
+
+* **bone:** add SkeletonStyle animation variants ([#24](https://github.com/karloows/skeleton/issues/24)) ([4ca9ef2](https://github.com/karloows/skeleton/commit/4ca9ef277e45f22c6eee10d6eac9839fc7e717ea))
+
+
+### Bug Fixes
+
+* **api:** resolve SkeletonImage per ambient config, verify SDK floor ([#19](https://github.com/karloows/skeleton/issues/19)) ([a1acae6](https://github.com/karloows/skeleton/commit/a1acae6cbb2e5acdfcbf99e8ebe0945efedcc7f9)), closes [#7](https://github.com/karloows/skeleton/issues/7) [#6](https://github.com/karloows/skeleton/issues/6)
+
 ## [0.1.0](https://github.com/karloows/skeleton/compare/v0.0.1...v0.1.0) (2026-09-03)
 
 
