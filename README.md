@@ -64,7 +64,7 @@ or
 
 ```yaml
 dependencies:
-  skeleton_tint: ^0.1.0 # x-release-please-version
+  skeleton_tint: ^0.2.0 # x-release-please-version
 ```
 
 Then import the package.
