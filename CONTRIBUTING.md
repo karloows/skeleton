@@ -20,8 +20,6 @@ All three must pass cleanly.
 
 ## Guidelines
 
-- Read [AGENTS.md](AGENTS.md) for repo conventions (branching, commits, PRs,
-  dependencies) — they apply to human contributors too.
 - Read [PLAN.md](PLAN.md) before adding features; it's the project brief.
 - Keep dependencies minimal — prefer Flutter/Dart built-ins over new
   packages.
